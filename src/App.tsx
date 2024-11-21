@@ -4,7 +4,9 @@ import {getNotification, SentMessage} from './service/api';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import Authentication from './pades/authentication';
 import ChatList from './pades/chat-list';
-import {AppProvider} from './hooks/useidInstance';
+import {IdInstanceProvider} from './hooks/useIdInstance';
+import {ApiTokenProvider} from './hooks/useApiToken';
+import {ContactsProvider} from './hooks/useContacts';
 
 const router = createBrowserRouter([
   {
@@ -60,10 +62,15 @@ function App() {
 
   return (
     <div className="App">
-      <AppProvider>
-        <RouterProvider router={router}/>
-      </AppProvider>
-      {/*<div id={'modal-wrapper'} style={{width: '100%', maxHeight: '100%', position: 'fixed', zIndex: 1200}}/>*/}
+      <IdInstanceProvider>
+        <ApiTokenProvider>
+          <ContactsProvider>
+            <RouterProvider router={router}/>
+            <div id={'modal-wrapper'} style={{width: '100%', maxHeight: '100%', position: 'fixed', zIndex: 1200}}/>
+          </ContactsProvider>
+      </ApiTokenProvider>
+      </IdInstanceProvider>
+
     </div>
   );
 }

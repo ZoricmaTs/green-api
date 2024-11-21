@@ -2,7 +2,8 @@ import './style.scss';
 import Input, {InputType, RulesInput} from '../../widgets/input';
 import {FormEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useAppContext} from '../../hooks/useidInstance';
+import {useIdInstanceContext} from '../../hooks/useIdInstance';
+import {useApiTokenContext} from '../../hooks/useApiToken';
 
 export type InputDataType = {
   label?: string,
@@ -14,7 +15,8 @@ export type InputDataType = {
 
 export default function Authentication() {
   const navigate = useNavigate();
-  const { idInstance, apiTokenInstance, setIdInstance, setApiTokenInstance } = useAppContext();
+  const { setIdInstance } = useIdInstanceContext();
+  const { setApiToken } = useApiTokenContext();
 
   const onAuthentication = (e: FormEvent) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export default function Authentication() {
     });
 
     setIdInstance(Number(formData['idInstance']));
-    setApiTokenInstance(formData['apiTokenInstance']);
+    setApiToken(formData['apiTokenInstance']);
 
     navigate('/chat-list/');
   }
