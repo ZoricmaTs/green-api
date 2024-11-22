@@ -4,6 +4,7 @@ import './style.scss';
 export enum InputType {
   TEXT = 'text',
   NUMBER = 'number',
+  PHONE = 'tel'
 }
 
 export type RulesInput = {
@@ -13,13 +14,14 @@ export type RulesInput = {
   required?: boolean,
 }
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string,
   value?: string,
   placeholder?: string,
   onValueChange?: (value: string) => void,
   name: string,
   rules: RulesInput,
+  validator?: (value: string) => string
 }
 
 function validate(rules: RulesInput, value: any): string {
@@ -43,7 +45,6 @@ export default function Input(props: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleChange')
     e.stopPropagation();
     const value = e.target.value;
 
@@ -53,9 +54,11 @@ export default function Input(props: InputProps) {
       props.onValueChange?.(value);
 
       const validationError = validate(props.rules, value);
-      inputRef.current.setCustomValidity(validationError);
-      setError(validationError || null);
-      console.log('error', error, inputRef.current.validity)
+      const customValidationError = props.validator?.(value) || '';
+
+      inputRef.current.setCustomValidity(validationError || customValidationError);
+
+      setError(validationError || customValidationError || null);
     }
   };
 

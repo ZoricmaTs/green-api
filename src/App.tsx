@@ -66,7 +66,7 @@ function App() {
         <ApiTokenProvider>
           <ContactsProvider>
             <RouterProvider router={router}/>
-            <div id={'modal-wrapper'} style={{width: '100%', maxHeight: '100%', position: 'fixed', zIndex: 1200}}/>
+            <div id={'modal-wrapper'} className={'modal-wrapper'}/>
           </ContactsProvider>
       </ApiTokenProvider>
       </IdInstanceProvider>

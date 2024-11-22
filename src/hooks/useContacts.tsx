@@ -1,7 +1,7 @@
 import React, {createContext, ReactNode, useContext, useState} from 'react';
 
 export type ContactType = {
-  phone: number,
+  phone: string,
 };
 
 export type ContactsContextType = {

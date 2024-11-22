@@ -1,0 +1,19 @@
+.modal {
+  height: 100vh;
+  width: 100%;
+  padding: 100px;
+
+  &__exit {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 40px;
+  }
+
+  &__form {
+    width: 100%;
+    &_submit-btn {
+      margin: 40px 0;
+    }
+  }
+}
