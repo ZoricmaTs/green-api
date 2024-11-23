@@ -3,7 +3,6 @@ import './style.scss';
 
 export enum InputType {
   TEXT = 'text',
-  NUMBER = 'number',
   PHONE = 'tel'
 }
 

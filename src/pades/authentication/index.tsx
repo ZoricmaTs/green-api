@@ -30,7 +30,7 @@ export default function Authentication() {
       }
     });
 
-    setIdInstance(Number(formData['idInstance']));
+    setIdInstance(formData['idInstance']);
     setApiToken(formData['apiTokenInstance']);
 
     navigate('/chat-list/');
@@ -42,7 +42,7 @@ export default function Authentication() {
       name: 'idInstance',
       placeholder: 'Введите свой idInstance',
       rules: {
-        type: InputType.NUMBER,
+        type: InputType.TEXT,
         required: true,
       }
     },

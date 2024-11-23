@@ -1,0 +1,51 @@
+.chat {
+  padding: 80px 30px;
+
+  &__form {
+    display: flex;
+    flex-direction: row;
+    &_btn {
+      margin-left: 24px;
+    }
+  }
+}
+
+.messages {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+
+  &__item {
+    width: 50%;
+    border-radius: 16px;
+    padding: 4px 16px;
+    margin: 2px;
+
+    &_time {
+      font-size: 12px;
+      text-align: right;
+      color: #888e88;
+    }
+  }
+}
+.incoming {
+  align-self: flex-start;
+  text-align: left;
+  background-color: #4f534f;
+}
+
+.outgoing {
+  align-self: flex-end;
+  text-align: right;
+  background-color: #3e6a3e;
+}
+
+.incoming.first {
+
+}
+
+.outgoing.first {
+
+}

@@ -1,14 +1,14 @@
 import React, {createContext, ReactNode, useContext, useState} from 'react';
 
 export type ApiTokenContextType = {
-  idInstance: number;
-  setIdInstance: (id: number) => void;
+  idInstance: string | null;
+  setIdInstance: (id: string) => void;
 };
 
 export const IdInstanceContext = createContext<ApiTokenContextType | undefined>(undefined);
 
 export const IdInstanceProvider = ({ children }: { children: ReactNode }) => {
-  const [idInstance, setIdInstance] = useState<number>(0);
+  const [idInstance, setIdInstance] = useState<string | null>(null);
 
   return <IdInstanceContext.Provider value={{idInstance, setIdInstance}}>
     {children}

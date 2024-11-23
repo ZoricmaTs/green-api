@@ -12,9 +12,9 @@
     padding: 8px 16px;
     border-radius: 8px;
     margin-bottom: 4px;
-    //flex: 1;
-    //resize: none;
-    //padding: 4px 50px;
+    background-color: #4f534f;
+    color: #efefef;
+    border: 1px solid transparent;
   }
 
   &__error-message {
@@ -22,3 +22,15 @@
   }
 }
 
+.text-area {
+  font-size: 20px;
+  flex: 1;
+
+  padding: 8px 16px;
+  border-radius: 8px;
+
+  background-color: #4f534f;
+  color: #efefef;
+  border: 1px solid transparent;
+  resize: none;
+}

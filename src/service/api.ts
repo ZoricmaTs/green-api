@@ -2,8 +2,23 @@ const APIurl = 'https://7103.api.greenapi.com';
 const waInstance = '7103153069';
 const apiTokenInstance = '0bfce88d6a3a4c7cb5caa6a60dbb833dbf5c2c847ebb4410b2';
 
-export function SentMessage(chatId: string, message: string): Promise<any> {
-  return fetch(`${APIurl}/waInstance${waInstance}/sendMessage/${apiTokenInstance}`, {
+export type InstanceType = {
+  idInstance: string,
+  apiToken: string,
+};
+
+export type Message = InstanceType & {
+  chatId: string,
+  message: string,
+};
+
+export type HistoryType = InstanceType & {
+  chatId: string,
+  count: number,
+};
+
+export function SendMessage({chatId, message, idInstance, apiToken}: Message): Promise<any> {
+  return fetch(`${APIurl}/waInstance${idInstance}/sendMessage/${apiToken}`, {
     method: 'POST',
     body: JSON.stringify({
       chatId,
@@ -45,6 +60,25 @@ export function deleteNotification(receiptId: number): Promise<any> {
   });
 }
 
+export function getMessages({chatId, count, idInstance, apiToken}: HistoryType): Promise<any> {
+  return fetch(`${APIurl}/waInstance${idInstance}/getChatHistory/${apiToken}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      chatId,
+      count,
+    }),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  })
+    .then(async (response) => {
+      const body: MessageDataType[] = await response.json();
+      return body;
+    })
+    .catch((res) => { console.log(res) })
+}
+
 export type Notification = {
   receiptId: number,
   body: {
@@ -76,7 +110,36 @@ export type Notification = {
       isForwarded: boolean
     }
   }
-}
+};
+
+export enum MessageType {
+  INCOMING = 'incoming',
+  OUTGOING = 'outgoing',
+};
+
+export type MessageDataType = {
+  type: MessageType,
+  idMessage?: string,
+  timestamp: number,
+  typeMessage?: string,
+  chatId?: string,
+  textMessage: string,
+  extendedTextMessage?: {
+    text: string,
+    title: string,
+    description: string
+    previewType: string,
+    jpegThumbnail: string,
+    forwardingScore: number,
+    isForwarded: boolean,
+  }
+  senderId?: string,
+  senderName?: string,
+  senderContactName?: string,
+  statusMessage?: string, //"delivered",
+  sendByApi?: boolean,
+  isDeleted?: boolean
+};
 
 //{
 //   "receiptId": 1,

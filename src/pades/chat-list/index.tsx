@@ -1,16 +1,14 @@
-import {useIdInstanceContext} from '../../hooks/useIdInstance';
-import {useApiTokenContext} from '../../hooks/useApiToken';
 import {useContactsContext} from '../../hooks/useContacts';
 import './style.scss';
 import Modal from '../../widgets/modal';
 import {useState} from 'react';
 import {createPortal} from 'react-dom';
+import {useNavigate} from 'react-router-dom';
 
 export default function ChatList() {
-  const { idInstance, setIdInstance } = useIdInstanceContext();
-  const { apiToken, setApiToken } = useApiTokenContext();
   const { contacts, setContacts } = useContactsContext();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const onClose = () => {
     setOpen(false);
@@ -24,6 +22,8 @@ export default function ChatList() {
     if (!existingContact) {
       setContacts([...contacts, {phone}]);
     }
+
+    navigate(`/chat/${phone}`);
   }
 
   return <div className={'scene'}>
@@ -31,7 +31,7 @@ export default function ChatList() {
       ? <h2 className={'chat-list__text'}>{'Начните переписку'}</h2>
       : <div>
         {contacts.map((contact, index) => {
-          return <div className={'chat-list__item'} key={`contact-${index}`}>{contact.phone}</div>
+          return <div className={'chat-list__item'} key={`contact-${index}`} onClick={() => navigate(`/chat/${contact.phone}`)}>{contact.phone}</div>
         })}
       </div>
     }

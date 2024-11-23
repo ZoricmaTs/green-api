@@ -1,12 +1,13 @@
-import React, {createContext, FormEvent, ReactNode, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.scss';
-import {getNotification, SentMessage} from './service/api';
+import {getMessages, getNotification} from './service/api';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import Authentication from './pades/authentication';
 import ChatList from './pades/chat-list';
 import {IdInstanceProvider} from './hooks/useIdInstance';
 import {ApiTokenProvider} from './hooks/useApiToken';
 import {ContactsProvider} from './hooks/useContacts';
+import Chat from './pades/chat';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "/chat-list",
     element: <ChatList/>,
+  },
+  {
+    path: "/chat/:phone",
+    element: <Chat/>,
   }
 ]);
 
@@ -45,21 +50,6 @@ function App() {
     }
   }, [isSending]);
 
-
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    const form = e.target as HTMLFormElement;
-    const formData: {[key: string]: string | number | File | File[]} = {};
-
-    new FormData(form).forEach((value, key) => {
-      formData[key] = value;
-      console.log('key', key)
-    });
-
-    SentMessage('79234036057@c.us', (formData['message'] as string));
-  }
-
   return (
     <div className="App">
       <IdInstanceProvider>
@@ -70,7 +60,6 @@ function App() {
           </ContactsProvider>
       </ApiTokenProvider>
       </IdInstanceProvider>
-
     </div>
   );
 }
