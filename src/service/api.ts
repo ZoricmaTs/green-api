@@ -33,8 +33,8 @@ export function SendMessage({chatId, message, idInstance, apiToken}: Message): P
     .catch((res) => { console.log(res) })
 }
 
-export function getNotification(): Promise<Notification> {
-  return fetch(`${APIurl}/waInstance${waInstance}/receiveNotification/${apiTokenInstance}?receiveTimeout=60000`, {
+export function getNotification({idInstance, apiToken}: InstanceType): Promise<Notification | null> {
+  return fetch(`${APIurl}/waInstance${idInstance}/receiveNotification/${apiToken}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -42,8 +42,9 @@ export function getNotification(): Promise<Notification> {
     },
   }).then(async (response) => {
     const body: Notification = await response.json();
+
     if (body) {
-      // await deleteNotification(body.receiptId);
+      await deleteNotification(body.receiptId);
     }
 
     return body;
@@ -51,7 +52,7 @@ export function getNotification(): Promise<Notification> {
 }
 
 export function deleteNotification(receiptId: number): Promise<any> {
-  return fetch(`${APIurl}/waInstance${waInstance}/deleteNotification/${apiTokenInstance}?${receiptId}`, {
+  return fetch(`${APIurl}/waInstance${waInstance}/deleteNotification/${apiTokenInstance}/${receiptId}`, {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',
@@ -96,20 +97,14 @@ export type Notification = {
       sender: string,
       senderName: string,
       senderContactName: string,
+    },
+    messageData: {
+      typeMessage: string,
+      textMessageData: {
+        textMessage: string,
+      }
     }
   },
-  messageData: {
-    typeMessage: string,
-    extendedTextMessageData: {
-      text: string
-      description: string
-      title: string
-      previewType: string
-      jpegThumbnail: string
-      forwardingScore: number
-      isForwarded: boolean
-    }
-  }
 };
 
 export enum MessageType {
@@ -140,36 +135,3 @@ export type MessageDataType = {
   sendByApi?: boolean,
   isDeleted?: boolean
 };
-
-//{
-//   "receiptId": 1,
-//   "body": {
-//     "typeWebhook": "incomingMessageReceived",
-//     "instanceData": {
-//       "idInstance": 7103153069,
-//       "wid": "996998098583@c.us",
-//       "typeInstance": "whatsapp"
-//     },
-//     "timestamp": 1732207239,
-//     "idMessage": "3FCAA3DA8CE934AA2CBA",
-//     "senderData": {
-//       "chatId": "79234036057@c.us",
-//       "chatName": "Женя Миллер",
-//       "sender": "79234036057@c.us",
-//       "senderName": "Евгений",
-//       "senderContactName": "Женя Миллер"
-//     },
-//     "messageData": {
-//       "typeMessage": "extendedTextMessage",
-//       "extendedTextMessageData": {
-//         "text": "Пипец капец",
-//         "description": "",
-//         "title": "",
-//         "previewType": "None",
-//         "jpegThumbnail": "",
-//         "forwardingScore": 0,
-//         "isForwarded": false
-//       }
-//     }
-//   }
-// }

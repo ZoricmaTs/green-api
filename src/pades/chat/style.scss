@@ -1,9 +1,10 @@
 .chat {
-  padding: 80px 30px;
+  padding: 70px 30px;
 
   &__form {
     display: flex;
     flex-direction: row;
+    margin-top: 12px;
     &_btn {
       margin-left: 24px;
     }
@@ -16,6 +17,8 @@
   overflow: scroll;
   display: flex;
   flex-direction: column;
+  padding-top: 15px;
+  padding-bottom: 15px;
 
   &__item {
     width: 50%;

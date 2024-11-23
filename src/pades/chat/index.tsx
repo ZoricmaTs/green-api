@@ -3,8 +3,9 @@ import {useIdInstanceContext} from '../../hooks/useIdInstance';
 import {useApiTokenContext} from '../../hooks/useApiToken';
 import TextArea, {TextAreaHandler} from '../../widgets/input/textArea';
 import Header from '../../widgets/header';
-import {FormEvent, useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {getMessages, MessageDataType, MessageType, SendMessage} from '../../service/api';
+import {FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {getMessages, MessageDataType, MessageType, Notification, SendMessage} from '../../service/api';
+import {useNotificationsContext} from '../../hooks/useNotifications';
 
 export function getFormattedTimeHM(timestamp: number): string {
   const date = new Date(timestamp * 1000);
@@ -17,6 +18,7 @@ export function getFormattedTimeHM(timestamp: number): string {
 export default function Chat(props: any) {
   const { idInstance } = useIdInstanceContext();
   const { apiToken } = useApiTokenContext();
+  const { addInterceptor, removeInterceptor } = useNotificationsContext();
   const [isSending, setSending] = useState<boolean>(false);
   const phone = (window.location.pathname).split('/').at(-1);
   const chatId = phone?.split('+').at(-1) + '@c.us';
@@ -25,21 +27,44 @@ export default function Chat(props: any) {
   const messagesRef = useRef<HTMLDivElement>(null);
   const isScrolledToEndBeforePaste = useRef(true);
 
-  function setMessagesGratefully(newMessages: MessageDataType[]) {
+  const setMessagesGratefully = useCallback((newMessages: MessageDataType[]) => {
     const scroller = messagesRef.current;
     if (scroller) {
       isScrolledToEndBeforePaste.current = scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight;
     }
 
     setMessages(newMessages);
-  }
+  }, [])
 
   useEffect(() => {
-    getMessages({chatId, apiToken, idInstance: idInstance as string, count: 10})
+    const handler = (notification: Notification) => {
+      if (notification.body.senderData.chatId === chatId) {
+        const message: MessageDataType = {
+          type: MessageType.INCOMING,
+          textMessage: notification.body.messageData.textMessageData.textMessage,
+          timestamp: notification.body.timestamp,
+        }
+
+        setMessagesGratefully([...messages, message]);
+
+        return true;
+      }
+      return false;
+    };
+    
+    addInterceptor(handler);
+    
+    return () => {
+      removeInterceptor(handler);
+    }
+  }, [addInterceptor, chatId, messages, removeInterceptor, setMessagesGratefully]);
+
+  useEffect(() => {
+    getMessages({chatId, apiToken, idInstance: idInstance as string, count: 20})
       .then((response: MessageDataType[]) => {
         setMessagesGratefully(response.reverse())
-      })
-  }, []);
+      });
+  }, [apiToken, chatId, idInstance]);
 
   useLayoutEffect(() => {
     if (isScrolledToEndBeforePaste.current && messagesRef.current) {
@@ -73,7 +98,7 @@ export default function Chat(props: any) {
         timestamp: + new Date() / 1000,
       }
 
-      setMessagesGratefully([...messages, message])
+      setMessagesGratefully([...messages, message]);
       textAreaRef.current?.setValue('');
     });
   };
@@ -82,7 +107,7 @@ export default function Chat(props: any) {
     <Header title={phone}/>
     <div className={'messages'} ref={messagesRef}>
       {messages && messages.map((message: MessageDataType, index: number) => {
-        return <div key={`message-${index}`} className={`${message.type} messages__item ${messages[index - 1]?.type != message.type ? 'first' : ''}`}>
+        return <div key={`message-${index}`} className={`${message.type} messages__item ${messages[index - 1]?.type !== message.type ? 'first' : ''}`}>
           <p>{message.textMessage}</p>
           <p className={'messages__item_time'}>{getFormattedTimeHM(message.timestamp)}</p>
         </div>
