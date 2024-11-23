@@ -27,14 +27,14 @@ export default function Chat(props: any) {
   const messagesRef = useRef<HTMLDivElement>(null);
   const isScrolledToEndBeforePaste = useRef(true);
 
-  const setMessagesGratefully = useCallback((newMessages: MessageDataType[]) => {
+  const addMessagesGratefully = useCallback((newMessages: MessageDataType[]) => {
     const scroller = messagesRef.current;
     if (scroller) {
       isScrolledToEndBeforePaste.current = scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight;
     }
 
-    setMessages(newMessages);
-  }, [])
+    setMessages(prevState => [...prevState, ...newMessages]);
+  }, [messages]);
 
   useEffect(() => {
     const handler = (notification: Notification) => {
@@ -45,7 +45,7 @@ export default function Chat(props: any) {
           timestamp: notification.body.timestamp,
         }
 
-        setMessagesGratefully([...messages, message]);
+        addMessagesGratefully([message]);
 
         return true;
       }
@@ -57,12 +57,12 @@ export default function Chat(props: any) {
     return () => {
       removeInterceptor(handler);
     }
-  }, [addInterceptor, chatId, messages, removeInterceptor, setMessagesGratefully]);
+  }, [addInterceptor, chatId, messages, removeInterceptor, addMessagesGratefully]);
 
   useEffect(() => {
     getMessages({chatId, apiToken, idInstance: idInstance as string, count: 20})
       .then((response: MessageDataType[]) => {
-        setMessagesGratefully(response.reverse())
+        addMessagesGratefully(response.reverse());
       });
   }, [apiToken, chatId, idInstance]);
 
@@ -98,7 +98,7 @@ export default function Chat(props: any) {
         timestamp: + new Date() / 1000,
       }
 
-      setMessagesGratefully([...messages, message]);
+      addMessagesGratefully([message]);
       textAreaRef.current?.setValue('');
     });
   };
