@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     path: "/chat/:phone",
     element: <AuthWrapper><Chat/></AuthWrapper>,
   }
-]);
+], {basename: '/green-api'});
 
 function App() {
   const { idInstance } = useIdInstanceContext();
