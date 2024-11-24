@@ -78,8 +78,10 @@ export default function Chat(props: any) {
     getMessages({chatId, apiUrl, apiToken, idInstance: idInstance as string, count: 20})
       .then((response: MessageDataType[]) => {
         addMessagesGratefully(response.reverse());
-      });
-  }, [addMessagesGratefully, apiToken, chatId, idInstance]);
+      }, (error) => {
+        console.log('error getMessages', error)
+      })
+  }, [addMessagesGratefully, apiToken, apiUrl, chatId, idInstance]);
 
   useLayoutEffect(() => {
     if (isScrolledToEndBeforePaste.current && messagesRef.current) {
@@ -116,6 +118,8 @@ export default function Chat(props: any) {
 
       addMessagesGratefully([message]);
       textAreaRef.current?.setValue('');
+    }, (error) => {
+      console.log('error SendMessage', error);
     });
   };
 

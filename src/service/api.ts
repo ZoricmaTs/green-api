@@ -29,9 +29,11 @@ export function SendMessage({chatId, message, idInstance, apiToken, apiUrl}: Mes
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-  })
-    .then((res) => { console.log(res) })
-    .catch((res) => { console.log(res) })
+  }).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(response);
+    }
+  });
 }
 
 export function getNotification({idInstance, apiToken, apiUrl}: InstanceType): Promise<Notification | null> {
@@ -42,6 +44,10 @@ export function getNotification({idInstance, apiToken, apiUrl}: InstanceType): P
       'Content-Type': 'application/json'
     },
   }).then(async (response) => {
+    if (!response.ok) {
+      return Promise.reject(response);
+    }
+
     const body: Notification = await response.json();
 
     if (body) {
@@ -59,10 +65,14 @@ export function deleteNotification({receiptId, instance}: { receiptId: number, i
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
+  }).then((response) => {
+    if (!response.ok) {
+      return Promise.reject(response);
+    }
   });
 }
 
-export function getMessages({chatId, count, idInstance, apiToken, apiUrl}: HistoryType): Promise<any> {
+export function getMessages({chatId, count, idInstance, apiToken, apiUrl}: HistoryType): Promise<MessageDataType[]> {
   return fetch(`${apiUrl}/waInstance${idInstance}/getChatHistory/${apiToken}`, {
     method: 'POST',
     body: JSON.stringify({
@@ -75,10 +85,13 @@ export function getMessages({chatId, count, idInstance, apiToken, apiUrl}: Histo
     },
   })
     .then(async (response) => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+
       const body: MessageDataType[] = await response.json();
       return body;
-    })
-    .catch((res) => { console.log(res) })
+    });
 }
 
 export type Notification = {
@@ -111,7 +124,7 @@ export type Notification = {
 export enum MessageType {
   INCOMING = 'incoming',
   OUTGOING = 'outgoing',
-};
+}
 
 export type MessageDataType = {
   type: MessageType,
@@ -132,7 +145,7 @@ export type MessageDataType = {
   senderId?: string,
   senderName?: string,
   senderContactName?: string,
-  statusMessage?: string, //"delivered",
+  statusMessage?: string,
   sendByApi?: boolean,
   isDeleted?: boolean
 };

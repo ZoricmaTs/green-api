@@ -46,8 +46,7 @@ function App() {
           if (response && response.body?.typeWebhook === 'incomingMessageReceived') {
             addNotification(response);
           }
-        })
-        .catch((response) => {
+        }, (error) => {
           if(!isEffectCancelled) {
             timeoutId = window.setTimeout(notificationsLoop, 100000);
           }
@@ -63,7 +62,7 @@ function App() {
       window.clearTimeout(timeoutId);
     }
 
-  }, [addNotification, apiToken, idInstance]);
+  }, [addNotification, apiToken, apiUrl, idInstance]);
 
   return (
     <div className="App">

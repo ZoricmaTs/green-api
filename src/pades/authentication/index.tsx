@@ -4,6 +4,7 @@ import {FormEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useIdInstanceContext} from '../../hooks/useIdInstance';
 import {useApiTokenContext} from '../../hooks/useApiToken';
+import {useApiUrlContext} from '../../hooks/useApiUrl';
 
 export type InputDataType = {
   label?: string,
@@ -17,6 +18,7 @@ export default function Authentication() {
   const navigate = useNavigate();
   const { setIdInstance } = useIdInstanceContext();
   const { setApiToken } = useApiTokenContext();
+  const { setApiUrl } = useApiUrlContext();
 
   const onAuthentication = (e: FormEvent) => {
     e.preventDefault();
@@ -32,6 +34,7 @@ export default function Authentication() {
 
     setIdInstance(formData['idInstance']);
     setApiToken(formData['apiTokenInstance']);
+    setApiUrl(formData['apiUrl']);
 
     navigate('/chat-list/');
   }
