@@ -28,7 +28,7 @@ const router = createBrowserRouter([
 function App() {
   const { idInstance } = useIdInstanceContext();
   const { apiToken } = useApiTokenContext();
-  const { notifications, setNotifications, addNotification } = useNotificationsContext();
+  const { addNotification } = useNotificationsContext();
 
   useEffect(() => {
     let isEffectCancelled = false;

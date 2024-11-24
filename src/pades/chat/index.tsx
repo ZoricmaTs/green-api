@@ -6,6 +6,9 @@ import Header from '../../widgets/header';
 import {FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {getMessages, MessageDataType, MessageType, Notification, SendMessage} from '../../service/api';
 import {useNotificationsContext} from '../../hooks/useNotifications';
+import {createPortal} from 'react-dom';
+import ModalNotification from '../../widgets/modal/notification';
+import {ContactType, useContactsContext} from '../../hooks/useContacts';
 
 export function getFormattedTimeHM(timestamp: number): string {
   const date = new Date(timestamp * 1000);
@@ -18,9 +21,10 @@ export function getFormattedTimeHM(timestamp: number): string {
 export default function Chat(props: any) {
   const { idInstance } = useIdInstanceContext();
   const { apiToken } = useApiTokenContext();
+  const { contacts, setContacts } = useContactsContext();
   const { addInterceptor, removeInterceptor } = useNotificationsContext();
   const [isSending, setSending] = useState<boolean>(false);
-  const phone = (window.location.pathname).split('/').at(-1);
+  const phone = (window.location.pathname).split('/').at(-1)!;
   const chatId = phone?.split('+').at(-1) + '@c.us';
   const [messages, setMessages] = useState<MessageDataType[]>([]);
   const textAreaRef = useRef<TextAreaHandler>();
@@ -34,7 +38,15 @@ export default function Chat(props: any) {
     }
 
     setMessages(prevState => [...prevState, ...newMessages]);
-  }, [messages]);
+  }, []);
+
+  useEffect(() => {
+    const currContact = contacts.find((contact: ContactType) => String(contact.phone) === phone);
+
+    if (!currContact) {
+      setContacts([...contacts, {phone}])
+    }
+  }, [contacts, phone, setContacts]);
 
   useEffect(() => {
     const handler = (notification: Notification) => {
@@ -49,6 +61,7 @@ export default function Chat(props: any) {
 
         return true;
       }
+
       return false;
     };
     
@@ -64,7 +77,7 @@ export default function Chat(props: any) {
       .then((response: MessageDataType[]) => {
         addMessagesGratefully(response.reverse());
       });
-  }, [apiToken, chatId, idInstance]);
+  }, [addMessagesGratefully, apiToken, chatId, idInstance]);
 
   useLayoutEffect(() => {
     if (isScrolledToEndBeforePaste.current && messagesRef.current) {
@@ -96,7 +109,7 @@ export default function Chat(props: any) {
         type: MessageType.OUTGOING,
         textMessage,
         timestamp: + new Date() / 1000,
-      }
+      };
 
       addMessagesGratefully([message]);
       textAreaRef.current?.setValue('');
@@ -117,5 +130,7 @@ export default function Chat(props: any) {
       <TextArea name={'message'} row={1} ref={textAreaRef}/>
       <button type={'submit'} className={'chat__form_btn btn'}>{'sent'}</button>
     </form>
+
+    {createPortal(<ModalNotification/>, document.getElementById('modal-wrapper')!)}
   </div>;
 }

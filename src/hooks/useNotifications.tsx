@@ -8,6 +8,7 @@ export type NotificationContextType = {
   notifications: Notification[];
   setNotifications: (notifications: Notification[]) => void;
   addNotification: (notification: Notification) => void;
+  removeNotification: (notification: Notification) => void;
   addInterceptor: (interceptor: (notification: Notification) => boolean) => void;
   removeInterceptor: (interceptor: Interceptor) => void;
 };
@@ -32,6 +33,9 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         setNotifications([...notifications, notification]);
       }
     }, [interceptors, notifications]),
+    removeNotification: useCallback((notification) => {
+      setNotifications(prevState => prevState.filter((n) => n !== notification));
+    }, []),
     addInterceptor: useCallback((interceptor: Interceptor) => {
       setInterceptors(prevState => [...prevState, interceptor]);
     }, []),
