@@ -12,6 +12,7 @@ Powered by Green-Api https://green-api.com
 4. To authorize use `apiUrl`, `apiTokenInstance` and `idInstance` values from your instance dashboard
 
 Settings example:
+
 ![img.png](settings-example.png)
 
 
