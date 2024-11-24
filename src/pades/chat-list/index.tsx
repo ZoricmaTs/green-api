@@ -4,6 +4,7 @@ import Modal from '../../widgets/modal';
 import {useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useNavigate} from 'react-router-dom';
+import ModalNotification from '../../widgets/modal/notification';
 
 export default function ChatList() {
   const { contacts, setContacts } = useContactsContext();
@@ -40,5 +41,7 @@ export default function ChatList() {
       <Modal onClose={onClose} addContact={addContact}/>,
       document.getElementById('modal-wrapper')!
     )}
+
+    {createPortal(<ModalNotification/>, document.getElementById('modal-wrapper')!)}
   </div>
 }
