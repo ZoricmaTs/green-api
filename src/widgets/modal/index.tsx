@@ -41,5 +41,5 @@ export default function Modal(props: any) {
     </form>
 
     <CloseButton className={'modal__exit btn btn__icon'} onClick={onClose}/>
-  </div>
+  </div>;
 }

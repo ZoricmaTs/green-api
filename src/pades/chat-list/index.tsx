@@ -10,7 +10,7 @@ import {useErrorsContext} from '../../hooks/useError';
 
 export default function ChatList() {
   const { contacts, setContacts } = useContactsContext();
-  const { errors, setErrors } = useErrorsContext();
+  const { errors } = useErrorsContext();
 
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();

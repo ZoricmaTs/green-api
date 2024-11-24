@@ -1,4 +1,3 @@
-import './style.scss';
 import Input, {InputType, RulesInput} from '../../widgets/input';
 import React, {FormEvent} from 'react';
 import {useNavigate} from 'react-router-dom';

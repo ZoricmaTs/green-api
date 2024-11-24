@@ -25,7 +25,7 @@ export default function ModalNotification() {
       {notifications.map((notification, index) => {
         const name = notification.body.senderData.senderContactName ? notification.body.senderData.senderContactName : notification.body.senderData.senderName;
 
-        const textMessage =notification.body.messageData.typeMessage == 'extendedTextMessage'
+        const textMessage =notification.body.messageData.typeMessage === 'extendedTextMessage'
           ? notification.body.messageData.extendedTextMessageData?.text
           : notification.body.messageData.textMessageData?.textMessage;
 
@@ -38,7 +38,3 @@ export default function ModalNotification() {
     </div>
   </div>
 }
-
-// position: absolute;
-// top: 0;
-// right: 4px;

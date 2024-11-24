@@ -10,12 +10,12 @@ function BadResponseError(props: {error: Response}) {
     props.error.json().then(value => {
       setBody(JSON.stringify(value));
     }, () => {});
-  }, []);
+  }, [props.error]);
 
   return <p style={{wordBreak: 'break-all'}}>
     {props.error.statusText}
     {!!body && body}
-  </p>
+  </p>;
 }
 
 function Error(props: {error: unknown}) {
@@ -40,5 +40,5 @@ export default function ModalError() {
       </div>
     })}
     <CloseButton className={'btn btn__icon modal__exit'} onClick={onClose}/>
-  </div>
+  </div>;
 }
