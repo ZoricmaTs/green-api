@@ -3,7 +3,8 @@ import './style.scss';
 
 export enum InputType {
   TEXT = 'text',
-  PHONE = 'tel'
+  PHONE = 'tel',
+  URL = 'url',
 }
 
 export type RulesInput = {

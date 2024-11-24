@@ -9,6 +9,7 @@ import Chat from './pades/chat';
 import {getNotification} from './service/api';
 import AuthWrapper from './widgets/auth-wrapper';
 import {useNotificationsContext} from './hooks/useNotifications';
+import {useApiUrlContext} from './hooks/useApiUrl';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
 function App() {
   const { idInstance } = useIdInstanceContext();
   const { apiToken } = useApiTokenContext();
+  const { apiUrl } = useApiUrlContext();
   const { addNotification } = useNotificationsContext();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ function App() {
     let timeoutId: number;
 
     function notificationsLoop() {
-      getNotification({apiToken, idInstance: idInstance as string})
+      getNotification({apiToken, idInstance: idInstance as string, apiUrl})
         .then((response) => {
           if (!isEffectCancelled) {
             notificationsLoop();

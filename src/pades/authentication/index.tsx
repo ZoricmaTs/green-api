@@ -54,6 +54,15 @@ export default function Authentication() {
         type: InputType.TEXT,
         required: true,
       }
+    },
+    {
+      label: 'apiUrl',
+      name: 'apiUrl',
+      placeholder: 'Введите свой apiUrl',
+      rules: {
+        type: InputType.URL,
+        required: true,
+      }
     }
   ];
 

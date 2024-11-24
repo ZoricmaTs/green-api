@@ -9,6 +9,7 @@ import {useNotificationsContext} from '../../hooks/useNotifications';
 import {createPortal} from 'react-dom';
 import ModalNotification from '../../widgets/modal/notification';
 import {ContactType, useContactsContext} from '../../hooks/useContacts';
+import {useApiUrlContext} from '../../hooks/useApiUrl';
 
 export function getFormattedTimeHM(timestamp: number): string {
   const date = new Date(timestamp * 1000);
@@ -21,6 +22,7 @@ export function getFormattedTimeHM(timestamp: number): string {
 export default function Chat(props: any) {
   const { idInstance } = useIdInstanceContext();
   const { apiToken } = useApiTokenContext();
+  const { apiUrl } = useApiUrlContext();
   const { contacts, setContacts } = useContactsContext();
   const { addInterceptor, removeInterceptor } = useNotificationsContext();
   const [isSending, setSending] = useState<boolean>(false);
@@ -73,7 +75,7 @@ export default function Chat(props: any) {
   }, [addInterceptor, chatId, messages, removeInterceptor, addMessagesGratefully]);
 
   useEffect(() => {
-    getMessages({chatId, apiToken, idInstance: idInstance as string, count: 20})
+    getMessages({chatId, apiUrl, apiToken, idInstance: idInstance as string, count: 20})
       .then((response: MessageDataType[]) => {
         addMessagesGratefully(response.reverse());
       });
@@ -101,7 +103,8 @@ export default function Chat(props: any) {
       chatId,
       message: textMessage,
       idInstance: idInstance as string,
-      apiToken
+      apiToken,
+      apiUrl,
     }).then(() => {
       setSending(true);
 
