@@ -22,3 +22,11 @@ Settings example:
 1. Clone repository
 2. Install NPM dependencies: `npm i`
 3. Run development server: `npm start`
+
+
+## Screenshots
+![](Screenshot 1.png)
+![](Screenshot 2.png)
+![](Screenshot 3.jpg)
+![](Screenshot 4.jpg)
+![](Screenshot 5.png)
