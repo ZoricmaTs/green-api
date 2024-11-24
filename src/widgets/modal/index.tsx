@@ -2,6 +2,7 @@ import {FormEvent, useEffect} from 'react';
 import './style.scss';
 import {InputType} from '../input';
 import PhoneInput from '../input/phoneInput';
+import CloseButton from '../close-button';
 
 export default function Modal(props: any) {
   const { onClose, addContact } = props;
@@ -39,6 +40,6 @@ export default function Modal(props: any) {
       <button type={'submit'} className={'modal__form_submit-btn btn'}>{'add'}</button>
     </form>
 
-    <button type={'button'} onClick={onClose} className={'modal__exit btn'}>{'close'}</button>
+    <CloseButton className={'modal__exit btn btn__icon'} onClick={onClose}/>
   </div>
 }

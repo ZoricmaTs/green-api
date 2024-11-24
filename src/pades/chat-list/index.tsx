@@ -1,13 +1,17 @@
 import {useContactsContext} from '../../hooks/useContacts';
 import './style.scss';
 import Modal from '../../widgets/modal';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {createPortal} from 'react-dom';
 import {useNavigate} from 'react-router-dom';
 import ModalNotification from '../../widgets/modal/notification';
+import ModalError from '../../widgets/modal/error';
+import {useErrorsContext} from '../../hooks/useError';
 
 export default function ChatList() {
   const { contacts, setContacts } = useContactsContext();
+  const { errors, setErrors } = useErrorsContext();
+
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -43,5 +47,6 @@ export default function ChatList() {
     )}
 
     {createPortal(<ModalNotification/>, document.getElementById('modal-wrapper')!)}
+    {errors.length > 0 && createPortal(<ModalError/>, document.getElementById('modal-wrapper')!)}
   </div>
 }

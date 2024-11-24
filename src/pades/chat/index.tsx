@@ -3,13 +3,15 @@ import {useIdInstanceContext} from '../../hooks/useIdInstance';
 import {useApiTokenContext} from '../../hooks/useApiToken';
 import TextArea, {TextAreaHandler} from '../../widgets/input/textArea';
 import Header from '../../widgets/header';
-import {FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {getMessages, MessageDataType, MessageType, Notification, SendMessage} from '../../service/api';
 import {useNotificationsContext} from '../../hooks/useNotifications';
 import {createPortal} from 'react-dom';
 import ModalNotification from '../../widgets/modal/notification';
 import {ContactType, useContactsContext} from '../../hooks/useContacts';
 import {useApiUrlContext} from '../../hooks/useApiUrl';
+import {useErrorsContext} from '../../hooks/useError';
+import ModalError from '../../widgets/modal/error';
 
 export function getFormattedTimeHM(timestamp: number): string {
   const date = new Date(timestamp * 1000);
@@ -24,11 +26,14 @@ export default function Chat(props: any) {
   const { apiToken } = useApiTokenContext();
   const { apiUrl } = useApiUrlContext();
   const { contacts, setContacts } = useContactsContext();
+  const { errors, setErrors } = useErrorsContext();
+
   const { addInterceptor, removeInterceptor } = useNotificationsContext();
   const [isSending, setSending] = useState<boolean>(false);
   const phone = (window.location.pathname).split('/').at(-1)!;
   const chatId = phone?.split('+').at(-1) + '@c.us';
   const [messages, setMessages] = useState<MessageDataType[]>([]);
+
   const textAreaRef = useRef<TextAreaHandler>();
   const messagesRef = useRef<HTMLDivElement>(null);
   const isScrolledToEndBeforePaste = useRef(true);
@@ -53,9 +58,12 @@ export default function Chat(props: any) {
   useEffect(() => {
     const handler = (notification: Notification) => {
       if (notification.body.senderData.chatId === chatId) {
+        const textMessage =notification.body.messageData.typeMessage == 'extendedTextMessage'
+          ? notification.body.messageData.extendedTextMessageData?.text
+          : notification.body.messageData.textMessageData?.textMessage
         const message: MessageDataType = {
           type: MessageType.INCOMING,
-          textMessage: notification.body.messageData.textMessageData.textMessage,
+          textMessage: textMessage || 'Failed to get message text',
           timestamp: notification.body.timestamp,
         }
 
@@ -79,7 +87,7 @@ export default function Chat(props: any) {
       .then((response: MessageDataType[]) => {
         addMessagesGratefully(response.reverse());
       }, (error) => {
-        console.log('error getMessages', error)
+        setErrors([...errors, error]);
       })
   }, [addMessagesGratefully, apiToken, apiUrl, chatId, idInstance]);
 
@@ -100,27 +108,28 @@ export default function Chat(props: any) {
     });
 
     const textMessage = formData['message'] as string;
+    if (textMessage.length > 0) {
+      SendMessage({
+        chatId,
+        message: textMessage,
+        idInstance: idInstance as string,
+        apiToken,
+        apiUrl,
+      }).then(() => {
+        setSending(true);
 
-    SendMessage({
-      chatId,
-      message: textMessage,
-      idInstance: idInstance as string,
-      apiToken,
-      apiUrl,
-    }).then(() => {
-      setSending(true);
+        const message: MessageDataType = {
+          type: MessageType.OUTGOING,
+          textMessage,
+          timestamp: + new Date() / 1000,
+        };
 
-      const message: MessageDataType = {
-        type: MessageType.OUTGOING,
-        textMessage,
-        timestamp: + new Date() / 1000,
-      };
-
-      addMessagesGratefully([message]);
-      textAreaRef.current?.setValue('');
-    }, (error) => {
-      console.log('error SendMessage', error);
-    });
+        addMessagesGratefully([message]);
+        textAreaRef.current?.setValue('');
+      }, (error) => {
+        setErrors([...errors, error]);
+      });
+    }
   };
 
   return <div className={'scene chat'} >
@@ -139,5 +148,6 @@ export default function Chat(props: any) {
     </form>
 
     {createPortal(<ModalNotification/>, document.getElementById('modal-wrapper')!)}
+    {errors.length > 0 && createPortal(<ModalError/>, document.getElementById('modal-wrapper')!)}
   </div>;
 }

@@ -8,11 +8,32 @@
   background-color: #3a3737;
   color: #efefef;
   padding: 140px 30px;
+  display: flex;
+  flex-direction: column;
 }
 
 .btn {
   font-size: 18px;
   padding: 8px 16px;
+  cursor: pointer;
+  background-color: #458c45;
+  color: #efefef;
+  border: 0;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: #2bb12b;
+  }
+
+  &__icon {
+    background-color: transparent;
+    border: 0;
+    color: #efefef;
+    &:hover {
+      color: #2bb12b;
+      background-color: transparent;
+    }
+  }
 }
 
 .modal-wrapper {
@@ -24,21 +45,4 @@
   left: 0;
   background-color: #3a3737;
   color: #efefef;
-}
-
-.input {
-  //position: absolute;
-  //bottom: 0;
-  //left: 0;
-  //right: 0;
-  //display: flex;
-  //flex-direction: row;
-  //align-items: flex-end;
-  //max-height: calc(100vh - 70px);
-
-  //&__text {
-  //  flex: 1;
-  //  resize: none;
-  //  padding: 4px 50px;
-  //}
 }

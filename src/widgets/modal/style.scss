@@ -12,6 +12,7 @@
 
   &__form {
     width: 100%;
+
     &_submit-btn {
       margin: 40px 0;
     }
@@ -28,9 +29,10 @@
   &__item {
     width: calc(100% - 32px);
     background-color: #278c27;
-    padding: 8px 16px;
+    padding: 8px 32px 8px 16px;
     border-radius: 8px;
     margin: 4px 16px;
+    cursor: pointer;
 
     &_text {
       white-space: nowrap;
@@ -42,5 +44,17 @@
       color: #69a869;
       font-size: 12px;
     }
+
+    &_btn {
+      position: absolute;
+      top: 0;
+      right: 4px;
+    }
   }
+}
+
+.error {
+  width: 100%;
+  height: 100vh;
+  padding: 100px;
 }

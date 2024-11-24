@@ -2,6 +2,7 @@ import './style.scss';
 import {useNotificationsContext} from '../../hooks/useNotifications';
 import {Notification} from '../../service/api';
 import {useNavigate} from 'react-router-dom';
+import CloseButton from '../close-button';
 
 export default function ModalNotification() {
   const navigate = useNavigate();
@@ -24,12 +25,20 @@ export default function ModalNotification() {
       {notifications.map((notification, index) => {
         const name = notification.body.senderData.senderContactName ? notification.body.senderData.senderContactName : notification.body.senderData.senderName;
 
+        const textMessage =notification.body.messageData.typeMessage == 'extendedTextMessage'
+          ? notification.body.messageData.extendedTextMessageData?.text
+          : notification.body.messageData.textMessageData?.textMessage;
+
         return <div className={'modal-notification__item'} key={index} onClick={() => openChat(notification)}>
-          <p className={'modal-notification__item_text'}>{notification.body.messageData.textMessageData.textMessage}</p>
+          <p className={'modal-notification__item_text'}>{textMessage}</p>
           <p className={'modal-notification__item_name'}>{name}</p>
-          <button onClick={() => onClose(notification)}>{'close'}</button>
+          <CloseButton className={'btn btn__icon modal-notification__item_btn'} onClick={(e) => onClose(notification)}/>
         </div>
       })}
     </div>
   </div>
 }
+
+// position: absolute;
+// top: 0;
+// right: 4px;

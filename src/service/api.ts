@@ -114,9 +114,12 @@ export type Notification = {
     },
     messageData: {
       typeMessage: string,
-      textMessageData: {
+      textMessageData?: {
         textMessage: string,
-      }
+      },
+      extendedTextMessageData?: {
+        text:	string;
+      },
     }
   },
 };

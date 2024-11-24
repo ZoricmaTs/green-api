@@ -1,10 +1,13 @@
 import './style.scss';
 import Input, {InputType, RulesInput} from '../../widgets/input';
-import {FormEvent} from 'react';
+import React, {FormEvent} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useIdInstanceContext} from '../../hooks/useIdInstance';
 import {useApiTokenContext} from '../../hooks/useApiToken';
 import {useApiUrlContext} from '../../hooks/useApiUrl';
+import {createPortal} from 'react-dom';
+import ModalError from '../../widgets/modal/error';
+import {useErrorsContext} from '../../hooks/useError';
 
 export type InputDataType = {
   label?: string,
@@ -16,9 +19,11 @@ export type InputDataType = {
 
 export default function Authentication() {
   const navigate = useNavigate();
+
   const { setIdInstance } = useIdInstanceContext();
   const { setApiToken } = useApiTokenContext();
   const { setApiUrl } = useApiUrlContext();
+  const { errors } = useErrorsContext();
 
   const onAuthentication = (e: FormEvent) => {
     e.preventDefault();
@@ -76,5 +81,7 @@ export default function Authentication() {
       })}
       <button className={'btn'} type={'submit'}>{'подключиться'}</button>
     </form>
+
+    {errors.length > 0 && createPortal(<ModalError/>, document.getElementById('modal-wrapper')!)}
   </div>
 }
