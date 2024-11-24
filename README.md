@@ -25,8 +25,8 @@ Settings example:
 
 
 ## Screenshots
-![](Screenshot 1.png)
-![](Screenshot 2.png)
-![](Screenshot 3.jpg)
-![](Screenshot 4.jpg)
-![](Screenshot 5.png)
+![](Screenshot_1.png)
+![](Screenshot_2.png)
+![](Screenshot_3.jpg)
+![](Screenshot_4.jpg)
+![](Screenshot_5.png)
