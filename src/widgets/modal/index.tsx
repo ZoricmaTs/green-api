@@ -37,7 +37,7 @@ export default function Modal(props: any) {
         label={'телефон'}
         name={'phone'}
       />
-      <button type={'submit'} className={'modal__form_submit-btn btn'}>{'add'}</button>
+      <button type={'submit'} className={'modal__form_submit-btn btn'}>{'добавить'}</button>
     </form>
 
     <CloseButton className={'modal__exit btn btn__icon'} onClick={onClose}/>

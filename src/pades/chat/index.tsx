@@ -144,7 +144,7 @@ export default function Chat(props: any) {
     </div>
     <form className={'chat__form'} onSubmit={onSubmit}>
       <TextArea name={'message'} row={1} ref={textAreaRef}/>
-      <button type={'submit'} className={'chat__form_btn btn'}>{'sent'}</button>
+      <button type={'submit'} className={'chat__form_btn btn'}>{'отправить'}</button>
     </form>
 
     {createPortal(<ModalNotification/>, document.getElementById('modal-wrapper')!)}
