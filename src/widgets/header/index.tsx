@@ -12,7 +12,7 @@ export default function Header(props: any) {
 
   return <div className={'header'}>
 
-    {window.history.length && <button className={'header__btn_back btn'} onClick={handleGoBack}>{'back'}</button>}
+    {window.history.length && <button className={'header__btn_back btn'} onClick={handleGoBack}>{'назад'}</button>}
 
     <div className={'header__text'}>
       {props.title}
